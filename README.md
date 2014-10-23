@@ -1,1 +1,1 @@
-A sudoku solver Maven project.
+A sudoku solution verifier Maven project.
