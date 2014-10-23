@@ -19,14 +19,17 @@ public class SudokuChecker {
 	private static final int SIZE = 9;
 	private static final int TOTAL_SIZE = 81;
 
-	private static final Path PATH = FileSystems.getDefault().getPath(
-			"resources", "samples.txt");
+	private static Path path;
 	
 	private int[] sqIndexes = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	
+	public SudokuChecker(String pathString) {
+		path = FileSystems.getDefault().getPath(pathString);
+	}
 
 	public void validate() {
 		try {
-			List<String> allLines = Files.readAllLines(PATH,
+			List<String> allLines = Files.readAllLines(path,
 					Charset.forName("UTF-8"));
 
 			int invCount = 0;
@@ -80,6 +83,7 @@ public class SudokuChecker {
 			rows[i / 9][i % 9] = number;
 			columns[i % 9][i / 9] = number;
 
+			// This expression finds the square index of a given element
 			int sqIndex = ((i / 3) % 3) + ((i / 27) * 3);
 
 			squares[sqIndex][sqIndexes[sqIndex]++] = number;
@@ -87,7 +91,12 @@ public class SudokuChecker {
 	}
 	
 	public static void main(String[] args) {
-		SudokuChecker sc = new SudokuChecker();
+		if(args.length<1){
+			System.err.println("Usage: java -cp sudoku-<version>.jar neonal.SudokuChecker path/to/file");
+			System.exit(-1);
+		}
+		
+		SudokuChecker sc = new SudokuChecker(args[0]);
 
 		sc.validate();
 	}
